@@ -9,46 +9,45 @@ using UnityEngine.SceneManagement;
 
 public class LogInManager : MonoBehaviour
 {
-    public string userEmail;
-    public string password;
-    public bool isExist = false;
+    private string id;
+    private string pw;
+    private bool isExist = false;
 
-    public InputField emailInput;
+    public InputField idInput;
     public InputField pwInput;
 
-    public Text logText;
     public Text popUpMsg;
 
     public GameObject popUpPanel;
-    public GameObject mainPanel;
+    public GameObject logInPanel;
     public GameObject loadingPanel;
-    public GameObject rankingPanel;
+    //public GameObject rankingPanel;
 
-    public int gold;
-    public int score;
+    //private int gold;
+    //private int score;
 
-    public Text goldText;
-    public Text scoreText;
+    //public Text goldText;
+    //public Text scoreText;
     public Text userIdText;
 
-    public GameObject rankingPrefab;
-    public Transform content;
+    //public GameObject rankingPrefab;
+    //public Transform content;
 
     public void OnClickSignUp()
     {
-        if (string.IsNullOrEmpty(emailInput.text) || string.IsNullOrEmpty(pwInput.text))
+        if (string.IsNullOrEmpty(idInput.text) || string.IsNullOrEmpty(pwInput.text))
         {
-            Debug.Log("아이디와 패스워드를 모두 일력해주세요...");
+            Debug.Log("아이디와 패스워드를 모두 일력해주세요.");
             popUpPanel.SetActive(true);
-            popUpMsg.text = "아이디와 패스워드를 모두 일력해주세요...";
+            popUpMsg.text = "아이디와 패스워드를 모두 일력해주세요.";
         }
         else
         {
-            Debug.Log("ID :: " + emailInput.text);
+            Debug.Log("ID :: " + idInput.text);
             Debug.Log("PW :: " + pwInput.text);
-            // FireStore에 ID 생성...
-            userEmail = emailInput.text;
-            password = pwInput.text;
+
+            id = idInput.text;
+            pw = pwInput.text;
             StartCoroutine(CreateUser());
         }
     }
@@ -60,23 +59,21 @@ public class LogInManager : MonoBehaviour
         yield return db = FirebaseFirestore.DefaultInstance;
 
         DocumentReference docRef;
-        yield return docRef = db.Collection("users").Document(userEmail);
+        yield return docRef = db.Collection("users").Document(id);
 
         Dictionary<string, object> user = new Dictionary<string, object>
         {
-            {"gold", 100 },
-            {"profileImage", "..." },
             {"score", 0 },
             {"updateTime", FieldValue.ServerTimestamp },
-            {"userPW", password }
+            {"userID", id },
+            {"userPW", pw }
         };
 
         yield return docRef.SetAsync(user).ContinueWithOnMainThread(task => {
             if (task.IsCompleted)
             {
-                Debug.Log($"{userEmail} 의 회원가입이 완료되었습니다...");
-                logText.text = $"{userEmail} 의 회원가입이 완료되었습니다...";
-                popUpMsg.text = $"{userEmail} 의 회원가입이 완료되었습니다...";
+                Debug.Log($"{id} 의 회원가입이 완료되었습니다.");
+                popUpMsg.text = $"{id}의 회원가입이 완료되었습니다.";
             }
             else
             {
@@ -90,19 +87,19 @@ public class LogInManager : MonoBehaviour
 
     public void OnClickLogin()
     {
-        if (string.IsNullOrEmpty(emailInput.text) || string.IsNullOrEmpty(pwInput.text))
+        if (string.IsNullOrEmpty(idInput.text) || string.IsNullOrEmpty(pwInput.text))
         {
-            Debug.Log("아이디와 패스워드를 모두 입력해주세요...");
+            Debug.Log("아이디와 패스워드를 모두 입력해주세요.");
             popUpPanel.SetActive(true);
-            popUpMsg.text = "아이디와 패스워드를 모두 입력해주세요...";
+            popUpMsg.text = "아이디와 패스워드를 모두 입력해주세요.";
         }
         else
         {
             //Debug.Log("ID :: " + emailInput.text);
             //Debug.Log("PW :: " + pwInput.text);
             // FireStore에 ID 생성...
-            userEmail = emailInput.text;
-            password = pwInput.text;
+            id = idInput.text;
+            pw = pwInput.text;
             StartCoroutine(ReadUserData());
         }
     }
@@ -114,7 +111,7 @@ public class LogInManager : MonoBehaviour
         yield return db = FirebaseFirestore.DefaultInstance;
 
         DocumentReference docRef;
-        yield return docRef = db.Collection("users").Document(userEmail);
+        yield return docRef = db.Collection("users").Document(id);
 
         yield return docRef.GetSnapshotAsync().ContinueWithOnMainThread(task => {
             DocumentSnapshot snapshot = task.Result;
@@ -130,7 +127,7 @@ public class LogInManager : MonoBehaviour
                     if (pair.Key == "userPW")
                     {
                         Debug.Log(pair.Value.ToString());
-                        if (pair.Value.ToString() != password)
+                        if (pair.Value.ToString() != pw)
                         {
                             Debug.Log("HERE!!!");
                             popUpPanel.SetActive(true);
@@ -139,24 +136,20 @@ public class LogInManager : MonoBehaviour
                         }
                         else
                         {
-                            mainPanel.SetActive(true);
-                            goldText.text = "Gold : " + gold;
-                            scoreText.text = "Score : " + score;
-                            userIdText.text = userEmail;
+                            logInPanel.SetActive(false);
+                            //scoreText.text = "Score : " + score;
+                            userIdText.text = id;
                         }
                     }
 
-                    if (pair.Key == "score")
-                        score = int.Parse(pair.Value.ToString());
+                    //if (pair.Key == "score")
+                        //score = int.Parse(pair.Value.ToString());
 
-                    if (pair.Key == "gold")
-                        gold = int.Parse(pair.Value.ToString());
                 }
             }
             else
             {
-                Debug.Log($"{userEmail} 은 존재하지 않습니다...");
-                logText.text = $"{userEmail} 은 존재하지 않습니다...";
+                Debug.Log($"{id} 은 존재하지 않습니다...");
                 popUpPanel.SetActive(true);
                 popUpMsg.text = $"아이디와 비밀번호를 확인해주세요...";
             }
@@ -167,10 +160,10 @@ public class LogInManager : MonoBehaviour
 
     public void OnClickUpdate()
     {
-        StartCoroutine(UpdateUserData(userEmail, gold, score));
+        //StartCoroutine(UpdateUserData(id,score));
     }
 
-    IEnumerator UpdateUserData(string userEmail, int userGold, int userScore)
+    IEnumerator UpdateUserData(string userEmail,int userScore)
     {
         loadingPanel.SetActive(true);
         FirebaseFirestore db;
@@ -181,7 +174,6 @@ public class LogInManager : MonoBehaviour
 
         Dictionary<string, object> dic = new Dictionary<string, object>
         {
-            {"gold", userGold },
             {"score", userScore },
             {"updateTime", FieldValue.ServerTimestamp }
         };
@@ -189,12 +181,11 @@ public class LogInManager : MonoBehaviour
         yield return docRef.SetAsync(dic, SetOptions.MergeAll);
         yield return new WaitForSeconds(1f);
         loadingPanel.SetActive(false);
-        logText.text = "Update Complete!!!";
     }
 
     public void OnClickDelete()
     {
-        StartCoroutine(DeleteUser(userEmail));
+        StartCoroutine(DeleteUser(id));
     }
 
     IEnumerator DeleteUser(string userEmail)
@@ -213,6 +204,7 @@ public class LogInManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    /*
     public void OnClickRanking()
     {
         StartCoroutine(GetRanking());
@@ -299,6 +291,7 @@ public class LogInManager : MonoBehaviour
         }
         rankingPanel.SetActive(false);
     }
+    */
 
     public void TestAddBtn()
     {
