@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "180956948572",
+    "project_id": "toomuchhero",
+    "storage_bucket": "toomuchhero.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180956948572:android:602418e8dfe5845e64de99",
+        "android_client_info": {
+          "package_name": "com.Noonbora.TooMuchHero"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4fWUZ7VSWooL_gfLf7VZyhGsn8T823lQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
