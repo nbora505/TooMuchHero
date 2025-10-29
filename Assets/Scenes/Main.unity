@@ -503,6 +503,7 @@ MonoBehaviour:
   logInPanel: {fileID: 1220860892}
   loadingPanel: {fileID: 745625255}
   userIdText: {fileID: 2029033564}
+  rememberToggle: {fileID: 1162107308}
 --- !u!1 &263342185
 GameObject:
   m_ObjectHideFlags: 0
