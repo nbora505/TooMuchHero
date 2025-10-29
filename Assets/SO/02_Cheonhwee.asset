@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8dd5338acc3d3d4eb3f69f1cf4f30a6, type: 3}
+  m_Name: 02_Cheonhwee
+  m_EditorClassIdentifier: 
+  id: 2
+  characterName: "\uC9C4\uCC9C\uD718"
+  atk: 3
+  hp: 1
+  star: 1
+  exp: 0
+  when: 1
+  what: 4
+  target: 1
+  skillValue: 010000000200000003000000
+  targetValue: 010000000100000001000000
+  skillDescription:
+  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uBB34\uC791\uC704 \uC801 \uD558\uB098\uC5D0\uAC8C
+    \uD53C\uD574\uB97C 1 \uC900\uB2E4."
+  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uBB34\uC791\uC704 \uC801 \uD558\uB098\uC5D0\uAC8C
+    \uD53C\uD574\uB97C 2 \uC900\uB2E4."
+  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uBB34\uC791\uC704 \uC801 \uD558\uB098\uC5D0\uAC8C
+    \uD53C\uD574\uB97C 3 \uC900\uB2E4."
+  characterSprite: {fileID: 0}
