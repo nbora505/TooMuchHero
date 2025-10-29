@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "180956948572",
+    "firebase_url": "https://toomuchhero-default-rtdb.firebaseio.com",
     "project_id": "toomuchhero",
     "storage_bucket": "toomuchhero.firebasestorage.app"
   },

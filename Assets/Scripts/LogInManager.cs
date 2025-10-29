@@ -33,6 +33,54 @@ public class LogInManager : MonoBehaviour
     //public GameObject rankingPrefab;
     //public Transform content;
 
+    public Toggle rememberToggle;
+
+    const string KEY_REMEMBER = "cred.remember";
+    const string KEY_ID = "cred.id";
+    const string KEY_PW = "cred.pw";
+
+    void Start()
+    {
+        LoadMemory();
+    }
+
+    void LoadMemory()
+    {
+        var remember = PlayerPrefs.GetInt(KEY_REMEMBER, 0) == 1;
+        rememberToggle.isOn = remember;
+
+        if (remember)
+        {
+            idInput.text = PlayerPrefs.GetString(KEY_ID, "");
+            pwInput.text = PlayerPrefs.GetString(KEY_PW, "");
+        }
+        else
+        {
+            idInput.text = "";
+            pwInput.text = "";
+        }
+    }
+
+    void SaveMemory(bool loginSucceeded)
+    {
+        if (!loginSucceeded)
+            return;
+
+        if (rememberToggle.isOn)
+        {
+            PlayerPrefs.SetInt(KEY_REMEMBER, 1);
+            PlayerPrefs.SetString(KEY_ID, idInput.text);
+            PlayerPrefs.SetString(KEY_PW, pwInput.text);
+            PlayerPrefs.Save();
+        }
+        else
+        {
+            PlayerPrefs.DeleteKey(KEY_REMEMBER);
+            PlayerPrefs.DeleteKey(KEY_ID);
+            PlayerPrefs.DeleteKey(KEY_PW);
+        }
+    }
+
     public void OnClickSignUp()
     {
         if (string.IsNullOrEmpty(idInput.text) || string.IsNullOrEmpty(pwInput.text))
@@ -55,33 +103,63 @@ public class LogInManager : MonoBehaviour
     IEnumerator CreateUser()
     {
         loadingPanel.SetActive(true);
-        FirebaseFirestore db;
-        yield return db = FirebaseFirestore.DefaultInstance;
 
-        DocumentReference docRef;
-        yield return docRef = db.Collection("users").Document(id);
-
-        Dictionary<string, object> user = new Dictionary<string, object>
+        var depTask = FirebaseApp.CheckAndFixDependenciesAsync();
+        yield return new WaitUntil(() => depTask.IsCompleted);
+        if (depTask.Result != DependencyStatus.Available)
         {
-            {"score", 0 },
-            {"updateTime", FieldValue.ServerTimestamp },
-            {"userID", id },
-            {"userPW", pw }
+            Debug.LogError($"Firebase deps: {depTask.Result}");
+            loadingPanel.SetActive(false);
+            yield break;
+        }
+
+        var db = FirebaseFirestore.DefaultInstance;
+        var docRef = db.Collection("users").Document(id);
+
+        var getTask = docRef.GetSnapshotAsync();
+        yield return new WaitUntil(() => getTask.IsCompleted);
+
+        if (getTask.IsFaulted || getTask.IsCanceled)
+        {
+            Debug.LogError(getTask.Exception);
+            popUpPanel.SetActive(true);
+            popUpMsg.text = "네트워크 오류!";
+            loadingPanel.SetActive(false);
+            yield break;
+        }
+
+        var snap = getTask.Result;
+        if (snap.Exists)
+        {
+            popUpPanel.SetActive(true);
+            popUpMsg.text = "이미 존재하는 아이디입니다.";
+            loadingPanel.SetActive(false);
+            yield break;
+        }
+
+        var user = new Dictionary<string, object> {
+            { "score", 0 },
+            { "updateTime", FieldValue.ServerTimestamp },
+            { "userID", id },
+            { "userPW", pw }
         };
 
-        yield return docRef.SetAsync(user).ContinueWithOnMainThread(task => {
-            if (task.IsCompleted)
-            {
-                Debug.Log($"{id} 의 회원가입이 완료되었습니다.");
-                popUpMsg.text = $"{id}의 회원가입이 완료되었습니다.";
-            }
-            else
-            {
-                Debug.Log(task.Exception);
-                popUpMsg.text = task.Exception.ToString();
-            }
-        });
-        yield return new WaitForSeconds(1f);
+        var setTask = docRef.SetAsync(user);
+        yield return new WaitUntil(() => setTask.IsCompleted);
+
+        if (setTask.IsFaulted || setTask.IsCanceled)
+        {
+            Debug.LogError(setTask.Exception);
+            popUpPanel.SetActive(true);
+            popUpMsg.text = setTask.Exception?.GetBaseException().Message ?? "작업 취소됨";
+        }
+        else
+        {
+            Debug.Log($"{id} 의 회원가입이 완료되었습니다.");
+            popUpPanel.SetActive(true);
+            popUpMsg.text = $"{id}의 회원가입이 완료되었습니다.";
+        }
+
         loadingPanel.SetActive(false);
     }
 
@@ -132,10 +210,12 @@ public class LogInManager : MonoBehaviour
                             Debug.Log("HERE!!!");
                             popUpPanel.SetActive(true);
                             popUpMsg.text = "아이디 혹은 비밀번호를 확인해주세요...";
+                            SaveMemory(false);
                             break;
                         }
                         else
                         {
+                            SaveMemory(true);
                             logInPanel.SetActive(false);
                             //scoreText.text = "Score : " + score;
                             userIdText.text = id;
@@ -152,6 +232,7 @@ public class LogInManager : MonoBehaviour
                 Debug.Log($"{id} 은 존재하지 않습니다...");
                 popUpPanel.SetActive(true);
                 popUpMsg.text = $"아이디와 비밀번호를 확인해주세요...";
+                SaveMemory(false);
             }
         });
         yield return new WaitForSeconds(1f);
