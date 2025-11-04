@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8dd5338acc3d3d4eb3f69f1cf4f30a6, type: 3}
+  m_Name: 15_Kywu
+  m_EditorClassIdentifier: 
+  id: 15
+  characterName: "\uD050\uC6B0"
+  atk: 2
+  hp: 5
+  star: 2
+  exp: 0
+  when: 6
+  what: 1
+  target: 0
+  skillValue: 030000000600000009000000
+  targetValue: 010000000100000001000000
+  skillDescription:
+  - "<b>\uD53C\uD574\uB97C \uC785\uC5C8\uC744 \uC2DC</b> \uACF5\uACA9\uB825 +3\uC744
+    \uC5BB\uB294\uB2E4."
+  - "<b>\uD53C\uD574\uB97C \uC785\uC5C8\uC744 \uC2DC</b> \uACF5\uACA9\uB825 +6\uC744
+    \uC5BB\uB294\uB2E4."
+  - "<b>\uD53C\uD574\uB97C \uC785\uC5C8\uC744 \uC2DC</b> \uACF5\uACA9\uB825 +9\uB97C
+    \uC5BB\uB294\uB2E4."
+  characterSprite: {fileID: 21300000, guid: 979e18cad6fed8f44a725d1afd623242, type: 3}
