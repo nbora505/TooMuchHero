@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b09c312f555d43746b648a8c57b0abd0, type: 3}
+  m_Name: 07_Jesa
+  m_EditorClassIdentifier: 
+  id: 7
+  star: 4
+  itemName: "\uC81C\uC0BF\uC0C1"
+  what: 1
+  target: 3
+  value: 1
+  itemDescription: "\uD604\uC7AC \uBC0F \uBBF8\uB798\uC758 \uC0C1\uC810\uC5D0 \uB098\uC624\uB294
+    \uBAA8\uB4E0 \uCE90\uB9AD\uD130\uB4E4\uC5D0\uAC8C \uACF5\uACA9\uB825 +1\uACFC
+    \uCCB4\uB825 +1\uC744 \uBD80\uC5EC\uD55C\uB2E4."
