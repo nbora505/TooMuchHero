@@ -7,7 +7,8 @@ public class Character_SO : ScriptableObject
     public int atk;
     public int hp;
     public int star;
-    public int exp;
+    public int lv;
+    public float exp;
 
     public enum When { turnStart, battleStart, dead, selled, bought, frontAttack, damaged, lose }
     public enum What { getHp, getAtk, getBoth, getBuff, extraAtk, summon, getGold, getExp, reduceAtk }

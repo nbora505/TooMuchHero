@@ -12,6 +12,7 @@ public class DeckManager : MonoBehaviour
 
     [Header("UI")]
     public GameObject purchaseBlockedPopup; // 꽉 찼을 때 켜는 팝업
+    public LevelUpManager LM;
 
     void Awake()
     {
@@ -53,8 +54,10 @@ public class DeckManager : MonoBehaviour
         // 2-1) 동일 아이디 → 합성: 새 토큰 제거 + 기존 토큰 경험치 증가
         if (existing.data.id == token.data.id)
         {
-            //existing.data.exp += token.data.mergeBonusExp;
+            if (existing.data.lv >= 3) return;
+            
             Debug.Log("경험치 추가");
+            LM.AddExp(existing);
             // 새 토큰 날리고, 데이터쪽도 fromSlot에서 제거
             RemoveFromDeckIfStillThere(token, fromSlot);
             Destroy(token.gameObject);

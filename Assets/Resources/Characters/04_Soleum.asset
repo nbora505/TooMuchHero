@@ -17,6 +17,7 @@ MonoBehaviour:
   atk: 2
   hp: 2
   star: 1
+  lv: 1
   exp: 0
   when: 2
   what: 2

@@ -14,6 +14,11 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     public Text text_hp;
     public Text text_name;
     public Text text_decription;
+
+    public GameObject icon_star;
+    public GameObject icon_lv;
+    public GameObject window_description;
+    public Slider slider_exp;
     #endregion
 
     public Canvas canvas;                    // 최상위 캔버스 참조
@@ -74,5 +79,21 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
         rect.anchorMax = new Vector2(0.5f, 0.5f);
         transform.SetAsLastSibling();
         CurrentSlot = slot;
+
+        OnDroppedInSlot();
     }
+
+    void OnDroppedInSlot()
+    {
+        icon_star.SetActive(false);
+        icon_lv.SetActive(true);
+
+    }
+
+    public void OnClickedToken()
+    {
+        window_description.SetActive(!window_description.activeSelf);
+    }
+
+
 }
