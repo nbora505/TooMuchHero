@@ -20,3 +20,4 @@ MonoBehaviour:
   value: 5
   itemDescription: "\uB450\uBC88\uC9F8 \uC801\uC744 \uD5A5\uD574 5 \uD53C\uD574\uB97C
     \uC8FC\uB294 \uCD94\uAC00 \uACF5\uACA9 \uBC84\uD504\uB97C \uBD80\uC5EC\uD55C\uB2E4."
+  itemSprite: {fileID: 21300000, guid: 26c28fe2afb1f2441bc86e21749c9a85, type: 3}

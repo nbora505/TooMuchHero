@@ -35,16 +35,27 @@ public class DataManager : MonoBehaviour
         Debug.Log($"[DataManager] {typeof(T).Name} {loaded.Length}°³ ·ÎµåµÊ ({path})");
     }
 
-    public Character_SO GetById(int wantedId)
+    public Character_SO GetCharacterById(int wantedId)
     {
         return CSO.Find(c => c.id == wantedId);
     }
 
-    public Character_SO GetRandomByStar(int wantedStar)
+    public Character_SO GetRandomCharacterByStar(int wantedStar)
     {
         var pool = CSO.FindAll(c => c.star == wantedStar);
         if (pool.Count == 0) return null;
         return pool[Random.Range(0, pool.Count)];
     }
 
+    public Item_SO GetItemById(int wantedId)
+    {
+        return ISO.Find(i => i.id == wantedId);
+    }
+
+    public Item_SO GetRandomItemByStar(int wantedStar)
+    {
+        var pool = ISO.FindAll(i => i.star == wantedStar);
+        if (pool.Count == 0) return null;
+        return pool[Random.Range(0, pool.Count)];
+    }
 }

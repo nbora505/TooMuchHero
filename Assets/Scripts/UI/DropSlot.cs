@@ -15,6 +15,10 @@ public class DropSlot : MonoBehaviour, IDropHandler
         if (eventData.pointerDrag == null) return;
         var draggable = eventData.pointerDrag.GetComponent<TokenController>();
         if (draggable == null) return;
-        deckManager.HandleDrop(this, draggable);
+
+        if (draggable.gameObject.tag == "character")
+            deckManager.HandleDrop(this, draggable);
+        else
+            deckManager.ItemDrop();
     }
 }

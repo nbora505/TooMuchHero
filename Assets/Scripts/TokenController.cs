@@ -4,9 +4,17 @@ using UnityEngine.UI;
 
 public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDragHandler
 {
-    public Character_SO data;
+    [HideInInspector] public Character_SO data;
+    [HideInInspector] public Item_SO itemData;
+
+    [Header("캐릭터 데이터")]
+    public int curExp;
+    public int curLv;
+    public int curAtk;
+    public int curHp;
 
     #region UI Elements
+    [Header("UI 요소")]
     public Image tokenImage;
     public Text text_star;
     public Text text_lv;
@@ -15,17 +23,20 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     public Text text_name;
     public Text text_decription;
 
+    [Space]
     public GameObject icon_star;
     public GameObject icon_lv;
     public GameObject window_description;
     public Slider slider_exp;
-    #endregion
 
+    [HideInInspector]
     public Canvas canvas;                    // 최상위 캔버스 참조
     private RectTransform rect;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
+    #endregion
 
+    [Header("Bool")]
     public bool isDragable = true;
     private bool isDroppedInSlot = false;
     private bool isInDeck = false;

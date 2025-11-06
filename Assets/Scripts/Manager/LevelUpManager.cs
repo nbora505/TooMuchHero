@@ -6,8 +6,8 @@ public class LevelUpManager : MonoBehaviour
     public void AddExp(TokenController TC)
     {
         Slider slider_exp = TC.slider_exp;
-        int lv = TC.data.lv;
-        float exp = TC.data.exp;
+        int lv = TC.curLv;
+        int exp = TC.curExp;
         exp++;
 
         if (lv == 1)
@@ -38,8 +38,8 @@ public class LevelUpManager : MonoBehaviour
         }
         else exp--;
 
-        TC.data.lv = lv;
-        TC.data.exp = exp;
+        TC.curLv = lv;
+        TC.curExp = exp;
         ResetTokenUI(TC);
     }
 
@@ -47,19 +47,19 @@ public class LevelUpManager : MonoBehaviour
     {
         if (isAtk)
         {
-            TC.data.atk += 1;
+            TC.curAtk += 1;
         }
         else
         {
-            TC.data.hp += 1;
+            TC.curHp += 1;
         }
         ResetTokenUI(TC);
     }
 
     public void ResetTokenUI(TokenController TC)
     {
-        TC.text_lv.text = TC.data.lv.ToString();
-        TC.text_atk.text = TC.data.atk.ToString();
-        TC.text_hp.text = TC.data.hp.ToString();
+        TC.text_lv.text = TC.curLv.ToString();
+        TC.text_atk.text = TC.curAtk.ToString();
+        TC.text_hp.text = TC.curHp.ToString();
     }
 }

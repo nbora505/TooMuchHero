@@ -54,7 +54,7 @@ public class DeckManager : MonoBehaviour
         // 2-1) 동일 아이디 → 합성: 새 토큰 제거 + 기존 토큰 경험치 증가
         if (existing.data.id == token.data.id)
         {
-            if (existing.data.lv >= 3) return;
+            if (existing.curLv >= 3) return;
             
             Debug.Log("경험치 추가");
             LM.AddExp(existing);
@@ -134,5 +134,10 @@ public class DeckManager : MonoBehaviour
         // 데이터 이동
         deck[DeckIndexFor(to)] = t.data;
         deck[DeckIndexFor(from)] = null;
+    }
+
+    public void ItemDrop()
+    {
+
     }
 }

@@ -21,3 +21,4 @@ MonoBehaviour:
   itemDescription: "\uD604\uC7AC \uBC0F \uBBF8\uB798\uC758 \uC0C1\uC810\uC5D0 \uB098\uC624\uB294
     \uBAA8\uB4E0 \uCE90\uB9AD\uD130\uB4E4\uC5D0\uAC8C \uACF5\uACA9\uB825 +1\uACFC
     \uCCB4\uB825 +1\uC744 \uBD80\uC5EC\uD55C\uB2E4."
+  itemSprite: {fileID: 21300000, guid: a221f47b6c7875b4e9421682bbc23598, type: 3}
