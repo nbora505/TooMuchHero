@@ -1,5 +1,5 @@
+using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class ItemMaker : MonoBehaviour
@@ -13,21 +13,47 @@ public class ItemMaker : MonoBehaviour
     public GameObject characterPrefab;
     public GameObject itemPrefab;
 
+    public List<GameObject> keepList_C = new List<GameObject>();
+    public List<GameObject> keepList_I = new List<GameObject>();
+
     public int curTurn;
 
     public void ResetShop()
     {
         for (int i = 0; i < characterShop.transform.childCount; i++)
         {
-            Destroy(characterShop.transform.GetChild(i).gameObject);
+            GameObject child = characterShop.transform.GetChild(i).gameObject;
+            if (!IsInKeepList(child)) Destroy(child);
         }
         for (int i = 0; i < itemShop.transform.childCount; i++)
         {
-            Destroy(itemShop.transform.GetChild(i).gameObject);
+            GameObject child = itemShop.transform.GetChild(i).gameObject;
+            if (!IsInKeepList(child)) Destroy(child);
         }
 
         MakeCharacterTokenInShop(curTurn);
         MakeItemTokenInShop(curTurn);
+    }
+
+    bool IsInKeepList(GameObject token)
+    {
+        if (token.tag == "character")
+        {
+            foreach (var item in keepList_C)
+            {
+                if (item == token)
+                    return true;
+            }
+            return false;
+        }
+        else { 
+            foreach (var item in keepList_I)
+            {
+                if (item == token)
+                    return true;
+            }
+            return false;
+        }
     }
 
     #region Character Token
@@ -36,7 +62,7 @@ public class ItemMaker : MonoBehaviour
         var range = table.ranges.FirstOrDefault(r =>
         turn >= r.minTurn && turn <= r.maxTurn);
 
-        for (int i = 0; i < range.itemCnt; i++)
+        for (int i = 0; i < range.itemCnt - keepList_C.Count; i++)
         {
             int star = HowMuchCharacterStar(range.probability);
 
@@ -84,7 +110,7 @@ public class ItemMaker : MonoBehaviour
         var range = itemTable.ranges.FirstOrDefault(r =>
         turn >= r.minTurn && turn <= r.maxTurn);
 
-        for (int i = 0; i < range.itemCnt; i++)
+        for (int i = 0; i < range.itemCnt - keepList_I.Count; i++)
         {
             int star = HowMuchCharacterStar(range.probability);
 

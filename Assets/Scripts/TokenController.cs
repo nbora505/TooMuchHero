@@ -34,12 +34,14 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     private RectTransform rect;
     private CanvasGroup canvasGroup;
     private Transform originalParent;
+    private GameObject manager;
+
     #endregion
 
     [Header("Bool")]
     public bool isDragable = true;
     private bool isDroppedInSlot = false;
-    private bool isInDeck = false;
+    public bool isInDeck = false;
 
     public DropSlot CurrentSlot { get; set; }     // 지금 끼워져 있는 슬롯
     public DropSlot OriginalSlotOnDrag { get; private set; } // 드래그 시작 시 슬롯
@@ -50,6 +52,8 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
         canvasGroup = gameObject.GetComponent<CanvasGroup>();
         if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
         if (canvas == null) canvas = GetComponentInParent<Canvas>();
+
+        manager = GameObject.Find("GameManager");
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -98,13 +102,29 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     {
         icon_star.SetActive(false);
         icon_lv.SetActive(true);
+        isInDeck = true;
+
+        OnClickedToken();
 
     }
 
     public void OnClickedToken()
     {
-        window_description.SetActive(!window_description.activeSelf);
-    }
+        ItemSeller IS = manager.GetComponent<ItemSeller>();
 
+        bool selected = IS.ChangeSelectedToken(this.gameObject);
+
+        if (selected)
+        {
+            window_description.SetActive(true);
+            IS.ChangeSellOrKeepButton(isInDeck);
+        }
+        else
+        {
+            window_description.SetActive(false);
+            IS.SetButtonOff();
+        }
+
+    }
 
 }

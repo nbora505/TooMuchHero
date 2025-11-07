@@ -1,6 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class DeckManager : MonoBehaviour
 {
@@ -128,16 +128,48 @@ public class DeckManager : MonoBehaviour
         var t = from.TC;
         if (t == null) return;
 
-        // UI 이동
-        t.SnapTo(to.transform, to);
-
-        // 데이터 이동
         deck[DeckIndexFor(to)] = t.data;
         deck[DeckIndexFor(from)] = null;
+
+        StartCoroutine(SmoothMove(t, to));
     }
 
-    public void ItemDrop()
+    IEnumerator SmoothMove(TokenController token, DropSlot to)
     {
+        var rect = token.GetComponent<RectTransform>();
+        var startParent = rect.parent;
+        var startPos = rect.position;
+        var endParent = to.transform;
 
+        rect.SetParent(endParent, true);
+        Vector3 endPos = to.GetComponent<RectTransform>().position;
+
+        float duration = 0.05f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            rect.position = Vector3.Lerp(startPos, endPos, t);
+            yield return null;
+        }
+
+        rect.position = endPos;
+        token.CurrentSlot = to;
+        rect.anchoredPosition = Vector2.zero;
+        rect.localScale = Vector3.one;
+    }
+
+    public void ItemDrop(DropSlot target, TokenController drag)
+    {
+        var token = drag.GetComponent<TokenController>();
+        if (token == null) return;
+
+        var existing = target.TC;
+        if (existing == null) return;
+        
+        Destroy(token.gameObject);
+        
     }
 }
