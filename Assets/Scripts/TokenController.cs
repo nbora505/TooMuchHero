@@ -44,7 +44,7 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     public bool isInDeck = false;
 
     public DropSlot CurrentSlot { get; set; }     // 지금 끼워져 있는 슬롯
-    public DropSlot OriginalSlotOnDrag { get; private set; } // 드래그 시작 시 슬롯
+    public DropSlot OriginalSlot { get; private set; } // 드래그 시작 시 슬롯
 
     void Awake()
     {

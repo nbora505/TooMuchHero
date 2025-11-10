@@ -41,7 +41,7 @@ public class DeckManager : MonoBehaviour
         var existing = target.TC;
 
         // 드래그 출발 슬롯의 데이터는 일단 비워둘 준비
-        var fromSlot = drag.OriginalSlotOnDrag;
+        var fromSlot = drag.OriginalSlot;
 
         if (existing == null)
         {
