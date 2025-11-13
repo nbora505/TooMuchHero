@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    #region Public Data
+
     [Header("인게임 데이터")]
     public string teamName;
     public int gold = 10;
@@ -19,7 +21,17 @@ public class GameManager : MonoBehaviour
     public List<TokenController> enemyDeck = new List<TokenController>();
     public List<TokenController> battleOrderList = new List<TokenController>();
 
+    #endregion
+
+    #region Private Data
+
+    TeamData enemyTeam;
+    bool isContinue, isPlay, isAuto, isSpeed, isGameOver;
+
+    #endregion
+
     #region UI
+
     [Header("이름짓기 화면 UI")]
     public GameObject namePanel;
     public InputField inputField_teamName;
@@ -52,8 +64,6 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    TeamData enemyTeam;
-    bool isGameStart, isPlay, isAuto, isSpeed, isGameOver;
 
     private void Start()
     {
@@ -63,7 +73,9 @@ public class GameManager : MonoBehaviour
     IEnumerator Game()
     {
         //팀 준비 창
-        //팀 이름 정하기
+        //팀 이름 버튼 누르면 시작
+        yield return new WaitUntil(() => isContinue);
+        isContinue = false;
 
         while (!isGameOver)
         {
@@ -72,7 +84,8 @@ public class GameManager : MonoBehaviour
 
 
             //시작버튼 누르면 전투 시작
-            yield return new WaitUntil(() => isGameStart);
+            yield return new WaitUntil(() => isContinue);
+            isContinue = false;
 
 
             //데이터 매칭
@@ -96,6 +109,8 @@ public class GameManager : MonoBehaviour
 
     }
 
+    #region 상점 함수
+
     void TurnStart()
     {
         gold = 10;
@@ -104,20 +119,10 @@ public class GameManager : MonoBehaviour
         gameObject.GetComponent<ItemMaker>().ResetShop();
         ResetUI();
     }
+    
+    #endregion
 
-    void SetBattlePage()
-    {
-        text_myName.text = teamName;
-        text_enemyName.text = enemyTeam.teamName;
-
-        for (int i = 0; i < playerSlots.Length; i++)
-        {
-            if(GetComponent<DeckManager>().deck[i] == null) continue;
-
-            playerDeck.Add(GetComponent<DeckManager>().deck[i]);
-            Instantiate(playerDeck[i], playerSlots[i]);
-        }
-    }
+    #region 전투 준비 함수
 
     void SetMyDeck()
     {
@@ -135,6 +140,38 @@ public class GameManager : MonoBehaviour
             enemyTeam = await mm.RandomUserMatching(12);
 
     }
+    void SetBattlePage()
+    {
+        text_myName.text = teamName;
+        text_enemyName.text = enemyTeam.teamName;
+
+        for (int i = 0; i < playerDeck.Count; i++)
+        {
+            Instantiate(playerDeck[i], playerSlots[i]);
+        }
+        for (int i = 0; i < enemyDeck.Count; i++)
+        {
+            Instantiate(enemyDeck[i], enemySlots[i]);
+        }
+
+    }
+    void SetBattleOrder()
+    {
+        battleOrderList.Clear();
+
+        for (int i = 0; i < playerDeck.Count; i++)
+            battleOrderList.Add(playerDeck[i]);
+        for (int i = 0; i < enemyDeck.Count; i++)
+            battleOrderList.Add(enemyDeck[i]);
+
+        battleOrderList = battleOrderList
+            .OrderByDescending(token => token.curAtk)
+            .ToList();
+    }
+
+    #endregion
+
+    #region 전투 진행 함수
 
     IEnumerator Battle()
     {
@@ -181,20 +218,6 @@ public class GameManager : MonoBehaviour
         yield return null;
     }
 
-    void SetBattleOrder()
-    {
-        battleOrderList.Clear();
-
-        for (int i = 0; i < playerDeck.Count; i++)
-            battleOrderList.Add(playerDeck[i]);
-        for (int i = 0; i < enemyDeck.Count; i++)
-            battleOrderList.Add(enemyDeck[i]);
-
-        battleOrderList = battleOrderList
-            .OrderByDescending(token => token.curAtk)
-            .ToList();
-    }
-
     IEnumerator DestroyToken(TokenController token)
     {
         playerDeck.Remove(token);
@@ -202,6 +225,10 @@ public class GameManager : MonoBehaviour
         Destroy(token.gameObject);
         yield break;
     }
+
+    #endregion
+
+    #region 전투 이후 함수
 
     void TurnEnd()
     {
@@ -219,6 +246,10 @@ public class GameManager : MonoBehaviour
     void GameRestart()
     {
     }
+
+    #endregion
+
+    #region 기타 함수
 
     void ResetUI()
     {
@@ -243,7 +274,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    #region Button Methods
+    #endregion
+
+    #region 버튼 함수
     public void OnClick_TeamNameSubmitButton()
     {
         int rand = Random.Range(0, 10);
@@ -253,8 +286,11 @@ public class GameManager : MonoBehaviour
         else teamName = $"여명 길드 헌터 {rand}팀";
 
         StartCoroutine(Loading(true));
+        
         namePanel.SetActive(false);
         readyPanel.SetActive(true);
+        isContinue = true;
+
         StartCoroutine(Loading(false));
 
     }
@@ -263,7 +299,7 @@ public class GameManager : MonoBehaviour
         readyPanel.SetActive(false);
         battlePanel.SetActive(true);
 
-        isGameStart = true;
+        isContinue = true;
 
     }
     public void OnClick_NoneAutoPlayButton()
