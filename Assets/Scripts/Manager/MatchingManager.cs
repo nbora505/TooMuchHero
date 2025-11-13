@@ -1,8 +1,7 @@
 using Firebase.Firestore;
-using Firebase.Extensions;
 using UnityEngine;
 using System.Threading.Tasks;
-using Unity.Android.Gradle.Manifest;
+using System.Linq;
 
 [FirestoreData]
 public class TeamData
@@ -19,7 +18,7 @@ public class MatchingManager : MonoBehaviour
 {
     int myTurn;
 
-    /*
+    
     public async Task<TeamData> RandomUserMatching()
     {
         var db = FirebaseFirestore.DefaultInstance;
@@ -36,7 +35,7 @@ public class MatchingManager : MonoBehaviour
 
         if (s1.Count > 0) 
         {
-            //picked = s1.Documents[0];
+            picked = s1.Documents.FirstOrDefault();
         }
         else
         {
@@ -50,13 +49,13 @@ public class MatchingManager : MonoBehaviour
             var s2 = await q2.GetSnapshotAsync();
             if (s2.Count > 0)
             {
-                //picked = s2.Documents[0];
+                picked = s2.Documents.FirstOrDefault();
             }
-
-            if (picked == null) return null;
-            var data = picked.ConvertTo<TeamData>();
-            return data;
         }
+
+        if (picked == null) return null;
+
+        var data = picked.ConvertTo<TeamData>();
+        return data;
     }
-    */
 }
