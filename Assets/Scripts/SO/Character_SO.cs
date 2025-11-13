@@ -11,8 +11,8 @@ public class Character_SO : ScriptableObject
     public int exp;
 
     public enum When { turnStart, battleStart, dead, selled, bought, frontAttack, damaged, lose }
-    public enum What { getHp, getAtk, getBoth, getBuff, extraAtk, summon, getGold, getExp, reduceAtk }
-    public enum Target { self, randomEnemy, randomFriend, range, backFriend, frontFriend, firstEnemy, firstFriend }
+    public enum What { getHp, getAtk, getBoth, getBuff, extraAtk, summon, getGold, getExp, reduceAtk, reduceDamage }
+    public enum Target { self, randomEnemy, randomFriend, range, backFriend, frontFriend, firstEnemy, firstFriend, all }
 
     public When when;
     public What what;

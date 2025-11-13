@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8dd5338acc3d3d4eb3f69f1cf4f30a6, type: 3}
+  m_Name: 20_Antares
+  m_EditorClassIdentifier: 
+  id: 20
+  characterName: "\uC548\uD0C0\uB808\uC2A4"
+  atk: 3
+  hp: 3
+  star: 2
+  lv: 1
+  exp: 0
+  when: 6
+  what: 9
+  target: 0
+  skillValue: 010000000200000003000000
+  targetValue: 010000000100000001000000
+  skillDescription:
+  - "\uD53C\uD574\uB97C 1 \uB35C \uBC1B\uB294\uB2E4."
+  - "\uD53C\uD574\uB97C 2 \uB35C \uBC1B\uB294\uB2E4."
+  - "\uD53C\uD574\uB97C 3 \uB35C \uBC1B\uB294\uB2E4."
+  characterSprite: {fileID: 21300000, guid: 3fc442739aff42b4da1a03dc2ecc85be, type: 3}

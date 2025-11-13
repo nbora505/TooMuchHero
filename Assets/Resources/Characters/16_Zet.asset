@@ -19,16 +19,16 @@ MonoBehaviour:
   star: 2
   lv: 1
   exp: 0
-  when: 1
+  when: 3
   what: 7
-  target: 0
+  target: 5
   skillValue: 010000000100000001000000
   targetValue: 010000000200000003000000
   skillDescription:
-  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294
-    \uC544\uAD70\uC5D0\uAC8C \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
-  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294
-    \uC544\uAD70 \uB458\uC5D0\uAC8C \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
-  - "<b>\uC804\uD22C \uC2DC\uC791 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294
-    \uC544\uAD70 \uC14B\uC5D0\uAC8C \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
-  characterSprite: {fileID: 21300000, guid: 979e18cad6fed8f44a725d1afd623242, type: 3}
+  - "<b>\uD310\uB9E4 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294 \uC544\uAD70\uC5D0\uAC8C
+    \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
+  - "<b>\uD310\uB9E4 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294 \uC544\uAD70
+    \uB458\uC5D0\uAC8C \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
+  - "<b>\uD310\uB9E4 \uC2DC</b> \uAC00\uC7A5 \uC55E\uC5D0 \uC788\uB294 \uC544\uAD70
+    \uC14B\uC5D0\uAC8C \uACBD\uD5D8\uCE58\uB97C +1 \uBD80\uC5EC\uD55C\uB2E4."
+  characterSprite: {fileID: 21300000, guid: 0ed1eac12de2f6b4482735016784e111, type: 3}
