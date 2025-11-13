@@ -8,18 +8,16 @@ public class TeamData
 {
     [FirestoreProperty] public string teamName { get; set; }
     [FirestoreProperty] public int turn { get; set; }
-    [FirestoreProperty] public int[] id { get; set; }
-    [FirestoreProperty] public int[] lv { get; set; }
-    [FirestoreProperty] public int[] atk { get; set; }
-    [FirestoreProperty] public int[] hp { get; set; }
+    [FirestoreProperty] public int[] characters { get; set; }
+    [FirestoreProperty] public int[] LV { get; set; }
+    [FirestoreProperty] public int[] ATK { get; set; }
+    [FirestoreProperty] public int[] HP { get; set; }
+    [FirestoreProperty] public float rand { get; set; }
 }
 
 public class MatchingManager : MonoBehaviour
 {
-    int myTurn;
-
-    
-    public async Task<TeamData> RandomUserMatching()
+    public async Task<TeamData> RandomUserMatching(int myTurn)
     {
         var db = FirebaseFirestore.DefaultInstance;
         double r = Random.value;

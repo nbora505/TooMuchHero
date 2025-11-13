@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,14 +52,15 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
-    bool isPlay, isAuto, isSpeed, isGameOver;
+    TeamData enemyTeam;
+    bool isGameStart, isPlay, isAuto, isSpeed, isGameOver;
 
     private void Start()
     {
-        Game();
+        StartCoroutine(Game());
     }
 
-    public void Game()
+    IEnumerator Game()
     {
         //팀 준비 창
         //팀 이름 정하기
@@ -69,11 +70,23 @@ public class GameManager : MonoBehaviour
             //상점 세팅
             TurnStart();
 
-            //시작버튼 누르면 게임 시작
 
-            //매칭
+            //시작버튼 누르면 전투 시작
+            yield return new WaitUntil(() => isGameStart);
+
+
+            //데이터 매칭
+            SetMyDeck();
+            SetEnemyDeck();
+
 
             //전투화면 세팅
+            SetBattlePage();
+
+
+            //전투
+            StartCoroutine(Battle());
+
 
             //라운드 종료
         }
@@ -82,7 +95,7 @@ public class GameManager : MonoBehaviour
         //메인 메뉴로 돌아가기
 
     }
-    
+
     void TurnStart()
     {
         gold = 10;
@@ -95,12 +108,32 @@ public class GameManager : MonoBehaviour
     void SetBattlePage()
     {
         text_myName.text = teamName;
-        text_enemyName.text = ""; //적 팀 이름
+        text_enemyName.text = enemyTeam.teamName;
 
         for (int i = 0; i < playerSlots.Length; i++)
         {
-            
+            if(GetComponent<DeckManager>().deck[i] == null) continue;
+
+            playerDeck.Add(GetComponent<DeckManager>().deck[i]);
+            Instantiate(playerDeck[i], playerSlots[i]);
         }
+    }
+
+    void SetMyDeck()
+    {
+        playerDeck.Clear();
+        playerDeck = GetComponent<DeckManager>().deck.ToList();
+    }
+    async void SetEnemyDeck()
+    {
+        enemyDeck.Clear();
+
+        MatchingManager mm = GetComponent<MatchingManager>();
+
+        enemyTeam = await mm.RandomUserMatching(turn);
+        if (enemyTeam == null)
+            enemyTeam = await mm.RandomUserMatching(12);
+
     }
 
     IEnumerator Battle()
@@ -128,6 +161,9 @@ public class GameManager : MonoBehaviour
             //공격 애니메이션 재생
 
             //체력 UI 변경
+            p1.text_hp.text = p1.curHp.ToString();
+            p2.text_hp.text = p2.curHp.ToString();
+            yield return new WaitForSeconds(1f);
 
             //사망 체크
             if (p1.curHp <= 0) StartCoroutine(DestroyToken(p1));
@@ -161,6 +197,9 @@ public class GameManager : MonoBehaviour
 
     IEnumerator DestroyToken(TokenController token)
     {
+        playerDeck.Remove(token);
+        battleOrderList.Remove(token);
+        Destroy(token.gameObject);
         yield break;
     }
 
@@ -176,12 +215,14 @@ public class GameManager : MonoBehaviour
     void GameOut()
     {
     }
+
     void GameRestart()
     {
     }
 
     void ResetUI()
     {
+        text_teamName.text = teamName;
         text_gold.text = gold.ToString();
         text_life.text = life.ToString();
         text_turn.text = turn.ToString();
@@ -219,17 +260,11 @@ public class GameManager : MonoBehaviour
     }
     public void OnClick_PlayBattleButton()
     {
-        StartCoroutine(Loading(true));
-
         readyPanel.SetActive(false);
         battlePanel.SetActive(true);
 
-        //매칭매니저 가져와서 매칭 시도
+        isGameStart = true;
 
-
-        StartCoroutine(Loading(false));
-
-        StartCoroutine(Battle());
     }
     public void OnClick_NoneAutoPlayButton()
     {

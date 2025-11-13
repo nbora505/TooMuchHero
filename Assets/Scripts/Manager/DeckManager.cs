@@ -8,7 +8,7 @@ public class DeckManager : MonoBehaviour
     public DropSlot[] slotsLeftToRight; // size=5, 인스펙터에서 왼쪽→오른쪽 순으로 할당
 
     [Header("Data Deck (오른쪽 끝=0)")]
-    public Character_SO[] deck; // 런타임에서 갱신됨
+    public TokenController[] deck; // 런타임에서 갱신됨
 
     [Header("UI")]
     public GameObject purchaseBlockedPopup; // 꽉 찼을 때 켜는 팝업
@@ -17,7 +17,7 @@ public class DeckManager : MonoBehaviour
     void Awake()
     {
         if (deck == null || deck.Length != slotsLeftToRight.Length)
-            deck = new Character_SO[slotsLeftToRight.Length];
+            deck = new TokenController[slotsLeftToRight.Length];
 
         for (int i = 0; i < slotsLeftToRight.Length; i++)
         {
@@ -90,7 +90,7 @@ public class DeckManager : MonoBehaviour
     private void PlaceToken(DropSlot slot, TokenController token)
     {
         token.SnapTo(slot.transform, slot);
-        deck[DeckIndexFor(slot)] = token.data;
+        deck[DeckIndexFor(slot)] = token;
     }
 
     // dir:-1 = 왼쪽으로 밀기, dir:+1 = 오른쪽으로 밀기
@@ -128,7 +128,7 @@ public class DeckManager : MonoBehaviour
         var t = from.TC;
         if (t == null) return;
 
-        deck[DeckIndexFor(to)] = t.data;
+        deck[DeckIndexFor(to)] = t;
         deck[DeckIndexFor(from)] = null;
 
         StartCoroutine(SmoothMove(t, to));
