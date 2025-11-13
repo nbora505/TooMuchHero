@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -64,6 +64,11 @@ public class GameManager : MonoBehaviour
 
     #endregion
 
+    #region Prefab
+    public GameObject characterPrefab;
+
+    #endregion
+
 
     private void Start()
     {
@@ -90,12 +95,7 @@ public class GameManager : MonoBehaviour
 
             //데이터 매칭
             SetMyDeck();
-            SetEnemyDeck();
-
-
-            //전투화면 세팅
-            SetBattlePage();
-
+            yield return WaitEnemyDeck();
 
             //전투
             StartCoroutine(Battle());
@@ -128,8 +128,35 @@ public class GameManager : MonoBehaviour
     {
         playerDeck.Clear();
         playerDeck = GetComponent<DeckManager>().deck.ToList();
+
+        for (int i = 0; i < playerDeck.Count; i++)
+        {
+            if (playerDeck[i] == null) continue;
+
+            GameObject characterToken = Instantiate(characterPrefab, playerSlots[i]);
+            TokenController TC = characterToken.GetComponent<TokenController>();
+
+            TC.data = playerDeck[i].data;
+            TC.tokenImage.sprite = TC.data.characterSprite;
+            TC.text_star.text = TC.data.star.ToString();
+            TC.text_name.text = TC.data.characterName;
+            TC.text_decription.text = TC.data.skillDescription[0];
+
+            TC.characterId = TC.data.id;
+            TC.curLv = playerDeck[i].curLv;
+            TC.curAtk = playerDeck[i].curAtk;
+            TC.curHp = playerDeck[i].curHp;
+
+            TC.text_lv.text = playerDeck[i].curLv.ToString();
+            TC.text_atk.text = playerDeck[i].curAtk.ToString();
+            TC.text_hp.text = playerDeck[i].curHp.ToString();
+
+        }
+
+        text_myName.text = teamName;
     }
-    async void SetEnemyDeck()
+
+    async Task SetEnemyDeck()
     {
         enemyDeck.Clear();
 
@@ -139,30 +166,60 @@ public class GameManager : MonoBehaviour
         if (enemyTeam == null)
             enemyTeam = await mm.RandomUserMatching(12);
 
-    }
-    void SetBattlePage()
-    {
-        text_myName.text = teamName;
+        for (int i = 0; i < 5; i++)
+        {
+            if (enemyTeam.characters[i] == 0) continue;
+
+            GameObject characterToken = Instantiate(characterPrefab, enemySlots[i]);
+
+            TokenController TC = characterToken.GetComponent<TokenController>();
+
+            TC.data = DataManager.instance.GetCharacterById(enemyTeam.characters[i]);
+            TC.tokenImage.sprite = TC.data.characterSprite;
+            TC.text_star.text = TC.data.star.ToString();
+            TC.text_name.text = TC.data.characterName;
+            TC.text_decription.text = TC.data.skillDescription[0];
+
+            TC.characterId = TC.data.id;
+            TC.curLv = enemyTeam.LV[i];
+            TC.curAtk = enemyTeam.ATK[i];
+            TC.curHp = enemyTeam.HP[i];
+
+            TC.text_lv.text = enemyTeam.LV[i].ToString();
+            TC.text_atk.text = enemyTeam.ATK[i].ToString();
+            TC.text_hp.text = enemyTeam.HP[i].ToString();
+
+            enemyDeck.Add(TC);
+        }
+
         text_enemyName.text = enemyTeam.teamName;
 
-        for (int i = 0; i < playerDeck.Count; i++)
-        {
-            Instantiate(playerDeck[i], playerSlots[i]);
-        }
-        for (int i = 0; i < enemyDeck.Count; i++)
-        {
-            Instantiate(enemyDeck[i], enemySlots[i]);
-        }
-
     }
+    IEnumerator WaitEnemyDeck()
+    {
+        var task = SetEnemyDeck();
+        while (!task.IsCompleted)
+            yield return null;
+
+        // 예외 처리
+        if (task.IsFaulted)
+            Debug.LogError(task.Exception);
+    }
+
     void SetBattleOrder()
     {
         battleOrderList.Clear();
 
         for (int i = 0; i < playerDeck.Count; i++)
+        {
+            if (playerDeck[i] == null) continue;
             battleOrderList.Add(playerDeck[i]);
+        }
         for (int i = 0; i < enemyDeck.Count; i++)
+        {
+            if (enemyDeck[i] == null) continue;
             battleOrderList.Add(enemyDeck[i]);
+        }
 
         battleOrderList = battleOrderList
             .OrderByDescending(token => token.curAtk)
@@ -250,6 +307,15 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region 기타 함수
+
+    public async void OnClickSaveDeckButton()
+    {
+        MatchingManager MM = GetComponent<MatchingManager>();
+
+        SetMyDeck();
+
+        await MM.SavePlayerDeck(playerDeck, this);
+    }
 
     void ResetUI()
     {

@@ -80,10 +80,18 @@ public class DeckManager : MonoBehaviour
     // 드래그 시작 슬롯에 여전히 이 토큰이 남아 있다면 덱에서 지움
     private void RemoveFromDeckIfStillThere(TokenController token, DropSlot fromSlot)
     {
-        if (fromSlot == null) return;
-        if (fromSlot.TC == token)
+        if (token == null) return;
+
+        for (int i = 0; i < deck.Length; i++)
         {
-            deck[DeckIndexFor(fromSlot)] = null;
+            if (deck[i] == token)
+            {
+                // 디버그용 로그 찍어보면 확인 가능
+                Debug.Log($"RemoveFromDeck: deck[{i}] 에서 {token.name} 제거");
+                deck[i] = null;
+                // 같은 참조가 또 있을 일은 없으니까 바로 break해도 됨
+                break;
+            }
         }
     }
 

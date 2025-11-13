@@ -8,6 +8,7 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
     [HideInInspector] public Item_SO itemData;
 
     [Header("캐릭터 데이터")]
+    public int characterId;
     public int curExp;
     public int curLv;
     public int curAtk;

@@ -85,6 +85,7 @@ public class ItemMaker : MonoBehaviour
         TC.text_name.text = TC.data.characterName;
         TC.text_decription.text = TC.data.skillDescription[0];
 
+        TC.characterId = TC.data.id;
         TC.curAtk = TC.data.atk;
         TC.curHp = TC.data.hp;
     }
