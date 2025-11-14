@@ -78,6 +78,9 @@ public class ItemMaker : MonoBehaviour
 
         TC.data = DataManager.instance.GetRandomCharacterByStar(star);
         TC.tokenImage.sprite = TC.data.characterSprite;
+        TC.tokenImage.flipX = false;
+        TC.tokenImage.SetVerticesDirty();
+
         TC.text_star.text = TC.data.star.ToString();
         TC.text_lv.text = TC.data.lv.ToString();
         TC.text_atk.text = TC.data.atk.ToString();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameManager : MonoBehaviour
 {
@@ -65,6 +66,8 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Prefab
+
+    [Header("«¡∏Æ∆’")]
     public GameObject characterPrefab;
 
     #endregion
@@ -96,6 +99,7 @@ public class GameManager : MonoBehaviour
             //µ•¿Ã≈Õ ∏≈ƒ™
             SetMyDeck();
             yield return WaitEnemyDeck();
+
 
             //¿¸≈ı
             StartCoroutine(Battle());
@@ -135,9 +139,13 @@ public class GameManager : MonoBehaviour
 
             GameObject characterToken = Instantiate(characterPrefab, playerSlots[i]);
             TokenController TC = characterToken.GetComponent<TokenController>();
+            TC.isDragable = false;
 
             TC.data = playerDeck[i].data;
             TC.tokenImage.sprite = TC.data.characterSprite;
+            characterToken.GetComponent<FlipImage>().flipX = false;
+            characterToken.GetComponent<FlipImage>().SetVerticesDirty();
+
             TC.text_star.text = TC.data.star.ToString();
             TC.text_name.text = TC.data.characterName;
             TC.text_decription.text = TC.data.skillDescription[0];
@@ -171,11 +179,14 @@ public class GameManager : MonoBehaviour
             if (enemyTeam.characters[i] == 0) continue;
 
             GameObject characterToken = Instantiate(characterPrefab, enemySlots[i]);
-
             TokenController TC = characterToken.GetComponent<TokenController>();
+            TC.isDragable = false;
 
             TC.data = DataManager.instance.GetCharacterById(enemyTeam.characters[i]);
             TC.tokenImage.sprite = TC.data.characterSprite;
+            characterToken.GetComponent<FlipImage>().flipX = true;
+            characterToken.GetComponent<FlipImage>().SetVerticesDirty();
+
             TC.text_star.text = TC.data.star.ToString();
             TC.text_name.text = TC.data.characterName;
             TC.text_decription.text = TC.data.skillDescription[0];

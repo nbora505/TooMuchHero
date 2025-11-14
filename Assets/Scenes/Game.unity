@@ -3217,6 +3217,7 @@ MonoBehaviour:
   remainWin_parent: {fileID: 246527699}
   loadingPanel: {fileID: 1559624609}
   characterPrefab: {fileID: 3201679126775350776, guid: d197b2e5639ff7a4fa9c7e1d086c30f6, type: 3}
+  flipMat: {fileID: 2100000, guid: ec1049c56444c4e4485bf21199b97234, type: 2}
 --- !u!114 &720578461
 MonoBehaviour:
   m_ObjectHideFlags: 0

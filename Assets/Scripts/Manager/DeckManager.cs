@@ -37,6 +37,8 @@ public class DeckManager : MonoBehaviour
     {
         var token = drag.GetComponent<TokenController>();
         if (token == null) return;
+        if(!token.isDragable) return;
+
 
         var existing = target.TC;
 

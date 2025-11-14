@@ -16,7 +16,7 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     #region UI Elements
     [Header("UI 요소")]
-    public Image tokenImage;
+    public FlipImage tokenImage;
     public Text text_star;
     public Text text_lv;
     public Text text_atk;
@@ -41,8 +41,8 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     [Header("Bool")]
     public bool isDragable = true;
-    private bool isDroppedInSlot = false;
     public bool isInDeck = false;
+    private bool isDroppedInSlot = false;
 
     public DropSlot CurrentSlot { get; set; }     // 지금 끼워져 있는 슬롯
     public DropSlot OriginalSlot { get; private set; } // 드래그 시작 시 슬롯
@@ -59,6 +59,7 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (!isDragable) return;
         isDroppedInSlot = false;
 
         originalParent = transform.parent;
@@ -70,11 +71,15 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!isDragable) return;
+
         rect.anchoredPosition += eventData.delta / canvas.scaleFactor; // 캔버스 스케일 보정
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!isDragable) return;
+
         canvasGroup.blocksRaycasts = true;
         canvasGroup.alpha = 1f;
 
@@ -88,6 +93,8 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     public void SnapTo(Transform parent, DropSlot slot)
     {
+        if (!isDragable) return;
+
         isDroppedInSlot = true;
         transform.SetParent(parent, true);
         rect.anchoredPosition = Vector2.zero;
@@ -101,6 +108,8 @@ public class TokenController : MonoBehaviour, IBeginDragHandler, IEndDragHandler
 
     void OnDroppedInSlot()
     {
+        if (!isDragable) return;
+
         icon_star.SetActive(false);
         icon_lv.SetActive(true);
         isInDeck = true;
