@@ -131,17 +131,18 @@ public class GameManager : MonoBehaviour
     void SetMyDeck()
     {
         playerDeck.Clear();
-        playerDeck = GetComponent<DeckManager>().deck.ToList();
+        List<TokenController> shopDeck = GetComponent<DeckManager>().deck.ToList();
 
-        for (int i = 0; i < playerDeck.Count; i++)
+
+        for (int i = 0; i < shopDeck.Count; i++)
         {
-            if (playerDeck[i] == null) continue;
+            if (shopDeck[i] == null) continue;
 
             GameObject characterToken = Instantiate(characterPrefab, playerSlots[i]);
             TokenController TC = characterToken.GetComponent<TokenController>();
             TC.isDragable = false;
 
-            TC.data = playerDeck[i].data;
+            TC.data = shopDeck[i].data;
             TC.tokenImage.sprite = TC.data.characterSprite;
             characterToken.GetComponent<FlipImage>().flipX = false;
             characterToken.GetComponent<FlipImage>().SetVerticesDirty();
@@ -151,14 +152,15 @@ public class GameManager : MonoBehaviour
             TC.text_decription.text = TC.data.skillDescription[0];
 
             TC.characterId = TC.data.id;
-            TC.curLv = playerDeck[i].curLv;
-            TC.curAtk = playerDeck[i].curAtk;
-            TC.curHp = playerDeck[i].curHp;
+            TC.curLv = shopDeck[i].curLv;
+            TC.curAtk = shopDeck[i].curAtk;
+            TC.curHp = shopDeck[i].curHp;
 
-            TC.text_lv.text = playerDeck[i].curLv.ToString();
-            TC.text_atk.text = playerDeck[i].curAtk.ToString();
-            TC.text_hp.text = playerDeck[i].curHp.ToString();
+            TC.text_lv.text = shopDeck[i].curLv.ToString();
+            TC.text_atk.text = shopDeck[i].curAtk.ToString();
+            TC.text_hp.text = shopDeck[i].curHp.ToString();
 
+            playerDeck.Add(TC);
         }
 
         text_myName.text = teamName;
@@ -206,6 +208,7 @@ public class GameManager : MonoBehaviour
         text_enemyName.text = enemyTeam.teamName;
 
     }
+
     IEnumerator WaitEnemyDeck()
     {
         var task = SetEnemyDeck();
@@ -253,11 +256,15 @@ public class GameManager : MonoBehaviour
             //빈자리 있을 때 자리 이동
 
             //양측 첫번째 토큰 기울이기
+            TokenController p1 = playerDeck[0], p2 = enemyDeck[0];
             
+            var t1 = p1.transform.DOLocalRotate(new Vector3(0, 0, -10f), 1f);
+            var t2 = p2.transform.DOLocalRotate(new Vector3(0, 0, 10f), 1f);
+            
+
+
             //그 상태로 대기
             yield return new WaitUntil(() => isPlay || isAuto);
-
-            TokenController p1 = playerDeck[0], p2 = enemyDeck[0];
 
             //서로서로 공격
             p1.curHp -= p2.curAtk;
